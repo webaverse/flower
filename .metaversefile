@@ -7,16 +7,16 @@
       "value": {
         "boneAttachment": "leftHand",
         "position": [0, 0, 0],
-        "quaternion": [0, 0, 0, 1]
+        "quaternion": [0.4999999999999999, -0.5, -0.5, 0.5000000000000001]
       }
     },
     {
-      "key": "eat",
+      "key": "use",
       "value": {
-        "animation": "throw",
+        "animation": "magic",
         "boneAttachment": "leftHand",
         "position": [0, 0, 0],
-        "quaternion": [0, 0, 0, 1],
+        "quaternion": [0.4999999999999999, -0.5, -0.5, 0.5000000000000001],
         "scale": [1, 1, 1]
       }
     }
