@@ -1,0 +1,24 @@
+{
+  "name": "flower",
+  "start_url": "Group2_Orchid.glb",
+  "components": [
+    {
+      "key": "wear",
+      "value": {
+        "boneAttachment": "leftHand",
+        "position": [0, 0, 0],
+        "quaternion": [0, 0, 0, 1]
+      }
+    },
+    {
+      "key": "eat",
+      "value": {
+        "animation": "throw",
+        "boneAttachment": "leftHand",
+        "position": [0, 0, 0],
+        "quaternion": [0, 0, 0, 1],
+        "scale": [1, 1, 1]
+      }
+    }
+  ]
+}
