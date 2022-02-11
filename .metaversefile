@@ -1,6 +1,6 @@
 {
   "name": "flower",
-  "start_url": "Group2_Orchid.glb",
+  "start_url": "index.js",
   "components": [
     {
       "key": "wear",
