@@ -82,9 +82,10 @@ export default () => {
 
   // window.particleSystem = particleSystem;
 
-  class ParticleEmitter {
+  class ParticleEmitter extends THREE.Object3D {
     constructor() {
-      this.position = new THREE.Vector3();
+      super();
+
       this.timeout = null;
 
       const now = performance.now()
