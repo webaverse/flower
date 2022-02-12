@@ -98,12 +98,14 @@ export default () => {
     }
     update(timestamp) {
       const localPlayer = useLocalPlayer();
-
       const now = timestamp;
       const timeDiff = now - this.lastParticleTimestamp;
+      const particleTime = 1000;
+      
       const _removeParticles = () => {
         this.particles = this.particles.filter(particle => {
-          if (now < particle.endTime) {
+          const timeDiff = now - particle.startTime;
+          if (timeDiff < particleTime) {
             return true;
           } else {
             particle.destroy();
@@ -116,7 +118,8 @@ export default () => {
         if (timeDiff >= this.nextParticleDelay) {
           const particle = particleSystem.addParticle('Elements - Energy 017 Charge Up noCT noRSZ.mov');
           particle.offset = new THREE.Vector3((-0.5 + Math.random()) * 2, (-0.5 + Math.random()) * 2, (-0.5 + Math.random()) * 2);
-          particle.endTime = now + (0.2 + 0.8*Math.random()) * 3000;
+          particle.startTime = now;
+          particle.timeFactor = 0;
           // console.log('endTime', particle.endTime);
           this.particles.push(particle);
 
@@ -126,12 +129,15 @@ export default () => {
       _addParticles();
       const _updateParticles = () => {
         if (this.particles.length > 0) {
+          localVector.set(0, Math.sin(timestamp/1000 * Math.PI * 2), 0.1)
+            .applyQuaternion(localPlayer.quaternion);
           for (const particle of this.particles) {
-            localVector.set(0, Math.sin(timestamp/1000 * Math.PI * 2), 0.1)
-              .applyQuaternion(localPlayer.quaternion);
             particle.position.copy(localPlayer.position)
               .add(particle.offset)
               .add(localVector);
+            const particleTimeDiff = now - particle.startTime;
+            particle.timeFactor = particleTimeDiff / particleTime;
+            // console.log('time factor', particle.timeFactor)
             particle.update();
           }
         }
