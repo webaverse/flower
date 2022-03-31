@@ -125,31 +125,33 @@ export default e => {
         });
       };
       _removeParticles();
-      const _addParticles = () => {
-        if (timeDiff >= this.nextParticleDelay) {
-          const particle = particleSystem.addParticle(particleName, {
-            lifetime: particleTime,
-          });
-          particle.offset = new THREE.Vector3((-0.5 + Math.random()) * 2, (-0.5 + Math.random()) * 2, (-0.5 + Math.random()) * 2);
-          this.particles.push(particle);
+      if (wearing) {
+        const _addParticles = () => {
+          if (timeDiff >= this.nextParticleDelay) {
+            const particle = particleSystem.addParticle(particleName, {
+              lifetime: particleTime,
+            });
+            particle.offset = new THREE.Vector3((-0.5 + Math.random()) * 2, (-0.5 + Math.random()) * 2, (-0.5 + Math.random()) * 2);
+            this.particles.push(particle);
 
-          this.resetNextUpdate(timestamp);
-        }
-      };
-      _addParticles();
-      const _updateParticles = () => {
-        if (this.particles.length > 0) {
-          /* localVector.set(0, Math.sin(timestamp/1000 * Math.PI * 2), 0.1)
-            .applyQuaternion(localPlayer.quaternion); */
-          for (const particle of this.particles) {
-            particle.position.copy(localPlayer.position)
-              .add(particle.offset)
-              // .add(localVector);
-            particle.update();
+            this.resetNextUpdate(timestamp);
           }
-        }
-      };
-      _updateParticles();
+        };
+        _addParticles();
+        const _updateParticles = () => {
+          if (this.particles.length > 0) {
+            /* localVector.set(0, Math.sin(timestamp/1000 * Math.PI * 2), 0.1)
+              .applyQuaternion(localPlayer.quaternion); */
+            for (const particle of this.particles) {
+              particle.position.copy(localPlayer.position)
+                .add(particle.offset)
+                // .add(localVector);
+              particle.update();
+            }
+          }
+        };
+        _updateParticles();
+      }
     }
   }
   const particleEmitter = new ParticleEmitter();
@@ -173,7 +175,7 @@ export default e => {
       const now = timestamp;
       const timeDiff = now - this.lastParticleTimestamp;
       const particleTime = 1000;
-      
+
       const _removeParticles = () => {
         this.particles = this.particles.filter(particle => {
           const timeDiff = now - particle.startTime;
@@ -186,28 +188,30 @@ export default e => {
         });
       };
       _removeParticles();
-      const _addParticles = () => {
-        if (timeDiff >= this.nextParticleDelay) {
-          const particle = particleSystem.addParticle(explosionName, {
-            lifetime: particleTime,
-          });
-          particle.offset = new THREE.Vector3((-0.5 + Math.random()) * 2, (-0.5 + Math.random()) * 2, (-0.5 + Math.random()) * 2);
-          this.particles.push(particle);
+      if (wearing) {
+        const _addParticles = () => {
+          if (timeDiff >= this.nextParticleDelay) {
+            const particle = particleSystem.addParticle(explosionName, {
+              lifetime: particleTime,
+            });
+            particle.offset = new THREE.Vector3((-0.5 + Math.random()) * 2, (-0.5 + Math.random()) * 2, (-0.5 + Math.random()) * 2);
+            this.particles.push(particle);
 
-          this.resetNextUpdate(timestamp);
-        }
-      };
-      _addParticles();
-      const _updateParticles = () => {
-        if (this.particles.length > 0) {
-          for (const particle of this.particles) {
-            particle.position.copy(localPlayer.position)
-              .add(particle.offset)
-            particle.update();
+            this.resetNextUpdate(timestamp);
           }
-        }
-      };
-      _updateParticles();
+        };
+        _addParticles();
+        const _updateParticles = () => {
+          if (this.particles.length > 0) {
+            for (const particle of this.particles) {
+              particle.position.copy(localPlayer.position)
+                .add(particle.offset)
+              particle.update();
+            }
+          }
+        };
+        _updateParticles();
+      }
     }
   }
   const particleEmitter2 = new ParticleEmitter2();
