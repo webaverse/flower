@@ -220,10 +220,10 @@ export default e => {
     return flowerApp ? flowerApp.getPhysicsObjectsOriginal() : [];
   };
   
-  useActivate(() => {
+  /* useActivate(() => {
     const localPlayer = useLocalPlayer();
     localPlayer.wear(app);
-  });
+  }); */
   
   let wearing = false;
   useWear(e => {
