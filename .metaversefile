@@ -1,5 +1,6 @@
 {
   "name": "flower",
+  "description": "flower",
   "start_url": "index.js",
   "components": [
     {
