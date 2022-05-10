@@ -7,9 +7,8 @@ const baseUrl = import.meta.url.replace(/(\/)[^\/\\]*$/, '$1');
 const emptyArray = [];
 const fnEmptyArray = () => emptyArray;
 
-const localVector = new THREE.Vector3();
+// const localVector = new THREE.Vector3();
 
-// const urlPrefix = `https://webaverse.github.io/fx-textures/`;
 // const _makeNameUrl = name => `${urlPrefix}${name}-spritesheet.ktx2`;
 const particleName = 'Elements - Energy 017 Charge Up noCT noRSZ.mov';
 const explosionName = 'Elements - Energy 119 Dissapear noCT noRSZ.mov';
@@ -23,77 +22,11 @@ const particleNames = [
 export default e => {
   const app = useApp();
   const scene = useScene();
-  // const physics = usePhysics();
-  const particleSystem = useParticleSystem();
+  const particleSystemManager = useParticleSystem();
 
   app.name = 'flower';
 
-  let flowerApp = null;
-  e.waitUntil(Promise.all(particleNames.map(particleName => particleSystem.preload(particleName)).concat([
-    (async () => {
-      let u2 = `${baseUrl}Group2_Orchid.glb`;
-      const m = await metaversefile.import(u2);
-      flowerApp = metaversefile.createApp({
-        name: u2,
-      });
-      flowerApp.position.copy(app.position);
-      flowerApp.quaternion.copy(app.quaternion);
-      flowerApp.scale.copy(app.scale);
-      flowerApp.updateMatrixWorld();
-      flowerApp.name = 'flower';
-      flowerApp.getPhysicsObjectsOriginal = flowerApp.getPhysicsObjects;
-      flowerApp.getPhysicsObjects = fnEmptyArray;
-      
-      const components = [
-        {
-          "key": "instanceId",
-          "value": getNextInstanceId(),
-        },
-        {
-          "key": "contentId",
-          "value": u2,
-        },
-        {
-          "key": "physics",
-          "value": true,
-        },
-        {
-          "key": "wear",
-          "value": {
-            "boneAttachment": "leftHand",
-            "position": [0, 0, 0],
-            "quaternion": [0.4999999999999999, -0.5, -0.5, 0.5000000000000001]
-          }
-        },
-        {
-          "key": "aim",
-          "value": {}
-        },
-        {
-          "key": "use",
-          "value": {
-            "animation": "magic",
-            "boneAttachment": "leftHand",
-            "position": [0, 0, 0],
-            "quaternion": [0.4999999999999999, -0.5, -0.5, 0.5000000000000001],
-            "scale": [1, 1, 1]
-          }
-        }
-      ];
-      
-      for (const {key, value} of components) {
-        flowerApp.setComponent(key, value);
-      }
-      await flowerApp.addModule(m);
-      scene.add(flowerApp);
-      
-      flowerApp.addEventListener('use', e => {
-        console.log('flower use');
-      });
-    })()
-  ])));
-
-  class ParticleEmitter extends THREE.Object3D {
+  /* class ParticleEmitter extends THREE.Object3D {
     constructor() {
       super();
 
@@ -113,55 +46,55 @@ export default e => {
       const timeDiff = now - this.lastParticleTimestamp;
       const particleTime = 1000;
       
-      const _removeParticles = () => {
-        this.particles = this.particles.filter(particle => {
-          const timeDiff = now - particle.startTime;
-          if (timeDiff < particleTime) {
-            return true;
-          } else {
-            particle.destroy();
-            return false;
-          }
-        });
-      };
-      _removeParticles();
-      if (wearing) {
-        const _addParticles = () => {
-          if (timeDiff >= this.nextParticleDelay) {
-            const particle = particleSystem.addParticle(particleName, {
-              lifetime: particleTime,
-            });
-            particle.offset = new THREE.Vector3((-0.5 + Math.random()) * 2, (-0.5 + Math.random()) * 2, (-0.5 + Math.random()) * 2);
-            this.particles.push(particle);
-
-            this.resetNextUpdate(timestamp);
-          }
-        };
-        _addParticles();
-        const _updateParticles = () => {
-          if (this.particles.length > 0) {
-            /* localVector.set(0, Math.sin(timestamp/1000 * Math.PI * 2), 0.1)
-              .applyQuaternion(localPlayer.quaternion); */
-            for (const particle of this.particles) {
-              particle.position.copy(localPlayer.position)
-                .add(particle.offset)
-                // .add(localVector);
-              particle.update();
+      if (particleSystem) {
+        const _removeParticles = () => {
+          this.particles = this.particles.filter(particle => {
+            const timeDiff = now - particle.startTime;
+            if (timeDiff < particleTime) {
+              return true;
+            } else {
+              particle.destroy();
+              return false;
             }
-          }
+          });
         };
-        _updateParticles();
+        _removeParticles();
+        if (wearing) {
+          const _addParticles = () => {
+            if (timeDiff >= this.nextParticleDelay) {
+              const particle = particleSystem.addParticle(particleName, {
+                lifetime: particleTime,
+              });
+              particle.offset = new THREE.Vector3((-0.5 + Math.random()) * 2, (-0.5 + Math.random()) * 2, (-0.5 + Math.random()) * 2);
+              this.particles.push(particle);
+
+              this.resetNextUpdate(timestamp);
+            }
+          };
+          _addParticles();
+          const _updateParticles = () => {
+            if (this.particles.length > 0) {
+              for (const particle of this.particles) {
+                particle.position.copy(localPlayer.position)
+                  .add(particle.offset)
+                particle.update();
+              }
+            }
+          };
+          _updateParticles();
+        }
       }
     }
   }
-  const particleEmitter = new ParticleEmitter();
+  const particleEmitter = new ParticleEmitter(); */
 
   class ParticleEmitter2 extends THREE.Object3D {
-    constructor() {
+    constructor(particleSystem) {
       super();
 
-      this.timeout = null;
+      this.particleSystem = particleSystem;
 
+      this.timeout = null;
       const now = performance.now()
       this.resetNextUpdate(now);
       this.particles = [];
@@ -191,7 +124,8 @@ export default e => {
       if (wearing) {
         const _addParticles = () => {
           if (timeDiff >= this.nextParticleDelay) {
-            const particle = particleSystem.addParticle(explosionName, {
+            const particleName = particleNames[Math.floor(Math.random() * particleNames.length)];
+            const particle = this.particleSystem.addParticle(particleName, {
               lifetime: particleTime,
             });
             particle.offset = new THREE.Vector3((-0.5 + Math.random()) * 2, (-0.5 + Math.random()) * 2, (-0.5 + Math.random()) * 2);
@@ -214,16 +148,85 @@ export default e => {
       }
     }
   }
-  const particleEmitter2 = new ParticleEmitter2();
+
+  let particleSystem = null;
+  let particleEmitter2 = null;
+  ((async () => {
+    particleSystem = particleSystemManager.createParticleSystem(particleNames);
+    await particleSystem.waitForLoad();
+    
+    scene.add(particleSystem);
+    particleSystem.updateMatrixWorld();
+
+    particleEmitter2 = new ParticleEmitter2(particleSystem);
+  })());
+
+  let flowerApp = null;
+  e.waitUntil((async () => {
+    let u2 = `${baseUrl}Group2_Orchid.glb`;
+    const m = await metaversefile.import(u2);
+    flowerApp = metaversefile.createApp({
+      name: u2,
+    });
+    flowerApp.position.copy(app.position);
+    flowerApp.quaternion.copy(app.quaternion);
+    flowerApp.scale.copy(app.scale);
+    flowerApp.updateMatrixWorld();
+    flowerApp.name = 'flower';
+    flowerApp.getPhysicsObjectsOriginal = flowerApp.getPhysicsObjects;
+    flowerApp.getPhysicsObjects = fnEmptyArray;
+    
+    const components = [
+      {
+        "key": "instanceId",
+        "value": getNextInstanceId(),
+      },
+      {
+        "key": "contentId",
+        "value": u2,
+      },
+      {
+        "key": "physics",
+        "value": true,
+      },
+      {
+        "key": "wear",
+        "value": {
+          "boneAttachment": "leftHand",
+          "position": [0, 0, 0],
+          "quaternion": [0.4999999999999999, -0.5, -0.5, 0.5000000000000001]
+        }
+      },
+      {
+        "key": "aim",
+        "value": {}
+      },
+      {
+        "key": "use",
+        "value": {
+          "animation": "magic",
+          "boneAttachment": "leftHand",
+          "position": [0, 0, 0],
+          "quaternion": [0.4999999999999999, -0.5, -0.5, 0.5000000000000001],
+          "scale": [1, 1, 1]
+        }
+      }
+    ];
+    
+    for (const {key, value} of components) {
+      flowerApp.setComponent(key, value);
+    }
+    await flowerApp.addModule(m);
+    scene.add(flowerApp);
+    
+    flowerApp.addEventListener('use', e => {
+      console.log('flower use');
+    });
+  })());
 
   app.getPhysicsObjects = () => {
     return flowerApp ? flowerApp.getPhysicsObjectsOriginal() : [];
   };
-  
-  /* useActivate(() => {
-    const localPlayer = useLocalPlayer();
-    localPlayer.wear(app);
-  }); */
   
   let wearing = false;
   useWear(e => {
@@ -263,14 +266,18 @@ export default e => {
       }
     }
 
-    particleEmitter.update(timestamp);
-    particleEmitter2.update(timestamp);
+    // particleEmitter.update(timestamp);
+    particleEmitter2 && particleEmitter2.update(timestamp);
   });
-  
+
   useCleanup(() => {
     if (flowerApp) {
       scene.remove(flowerApp);
       flowerApp.destroy();
+    }
+    if (particleSystem) {
+      scene.remove(particleSystem);
+      particleSystem.destroy();
     }
   });
   
