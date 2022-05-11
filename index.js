@@ -238,8 +238,7 @@ export default e => {
     flowerApp.updateMatrixWorld();
     
     flowerApp.dispatchEvent({
-      type: 'wearupdate',
-      wear,
+      ...e,
     });
 
     wearing = wear;
