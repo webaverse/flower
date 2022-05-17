@@ -26,68 +26,6 @@ export default e => {
 
   app.name = 'flower';
 
-  /* class ParticleEmitter extends THREE.Object3D {
-    constructor() {
-      super();
-
-      this.timeout = null;
-
-      const now = performance.now()
-      this.resetNextUpdate(now);
-      this.particles = [];
-    }
-    resetNextUpdate(now) {
-      this.lastParticleTimestamp = now;
-      this.nextParticleDelay = Math.random() * 100;
-    }
-    update(timestamp) {
-      const localPlayer = useLocalPlayer();
-      const now = timestamp;
-      const timeDiff = now - this.lastParticleTimestamp;
-      const particleTime = 1000;
-      
-      if (particleSystem) {
-        const _removeParticles = () => {
-          this.particles = this.particles.filter(particle => {
-            const timeDiff = now - particle.startTime;
-            if (timeDiff < particleTime) {
-              return true;
-            } else {
-              particle.destroy();
-              return false;
-            }
-          });
-        };
-        _removeParticles();
-        if (wearing) {
-          const _addParticles = () => {
-            if (timeDiff >= this.nextParticleDelay) {
-              const particle = particleSystem.addParticle(particleName, {
-                lifetime: particleTime,
-              });
-              particle.offset = new THREE.Vector3((-0.5 + Math.random()) * 2, (-0.5 + Math.random()) * 2, (-0.5 + Math.random()) * 2);
-              this.particles.push(particle);
-
-              this.resetNextUpdate(timestamp);
-            }
-          };
-          _addParticles();
-          const _updateParticles = () => {
-            if (this.particles.length > 0) {
-              for (const particle of this.particles) {
-                particle.position.copy(localPlayer.position)
-                  .add(particle.offset)
-                particle.update();
-              }
-            }
-          };
-          _updateParticles();
-        }
-      }
-    }
-  }
-  const particleEmitter = new ParticleEmitter(); */
-
   class ParticleEmitter2 extends THREE.Object3D {
     constructor(particleSystem) {
       super();
