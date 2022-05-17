@@ -45,12 +45,12 @@ export default e => {
       const localPlayer = useLocalPlayer();
       const now = timestamp;
       const timeDiff = now - this.lastParticleTimestamp;
-      const particleTime = 1000;
+      const duration = 1000;
 
       const _removeParticles = () => {
         this.particles = this.particles.filter(particle => {
           const timeDiff = now - particle.startTime;
-          if (timeDiff < particleTime) {
+          if (timeDiff < duration) {
             return true;
           } else {
             particle.destroy();
@@ -64,7 +64,7 @@ export default e => {
           if (timeDiff >= this.nextParticleDelay) {
             const particleName = particleNames[Math.floor(Math.random() * particleNames.length)];
             const particle = this.particleSystem.addParticle(particleName, {
-              lifetime: particleTime,
+              duration,
             });
             particle.offset = new THREE.Vector3((-0.5 + Math.random()) * 2, (-0.5 + Math.random()) * 2, (-0.5 + Math.random()) * 2);
             this.particles.push(particle);
