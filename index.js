@@ -90,7 +90,9 @@ export default e => {
   let particleSystem = null;
   let particleEmitter2 = null;
   ((async () => {
-    particleSystem = particleSystemManager.createParticleSystem(particleNames);
+    particleSystem = particleSystemManager.createParticleSystem({
+      particleNames,
+    });
     await particleSystem.waitForLoad();
     
     scene.add(particleSystem);
